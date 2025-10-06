@@ -116,7 +116,6 @@ const fetchUsers = async () => {
   error.value = null;
   try {
     const res = await getUsers();
-    console.log(res);
     users.value = res.data.users;
   } catch (err) {
     console.error(err);
