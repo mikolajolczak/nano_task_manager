@@ -48,6 +48,28 @@
         </div>
       </div>
     </div>
+        <div
+      id="confirmDeleteModal"
+      ref="deleteModalRef"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="confirmDeleteLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="confirmDeleteLabel" class="modal-title">Confirm Delete</h5>
+            <button type="button" class="btn-close" @click="closeDeleteModal"></button>
+          </div>
+          <div class="modal-body">Are you sure you want to delete this tag?</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="closeDeleteModal">Cancel</button>
+            <button class="btn btn-danger" @click="confirmDelete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,6 +85,11 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const editingTag = ref<Tag | undefined>(undefined);
 const modalRef = ref<HTMLDivElement | null>(null);
+
+const deleteModalRef = ref<HTMLDivElement | null>(null);
+let bootstrapDeleteModal: Modal | null = null;
+let tagIdToDelete: string | null = null;
+
 
 let bootstrapModal: Modal | null = null;
 
@@ -103,15 +130,35 @@ const handleFormSubmit = async (data: Tag) => {
     alert("Failed to save tag.");
   }
 };
+const deleteTag = (id: string) => {
+  tagIdToDelete = id;
+  showDeleteModal();
+};
 
-const deleteTag = async (id: string) => {
-  if (!confirm("Are you sure you want to delete this tag?")) return;
+const showDeleteModal = () => {
+  if (deleteModalRef.value) {
+    bootstrapDeleteModal ??= new Modal(deleteModalRef.value);
+    bootstrapDeleteModal.show();
+  }
+};
+
+const closeDeleteModal = () => {
+  if (bootstrapDeleteModal) {
+    bootstrapDeleteModal.hide();
+  }
+};
+
+const confirmDelete = async () => {
+  if (!tagIdToDelete) return;
   try {
-    await apiDeleteTag(id);
+    await apiDeleteTag(tagIdToDelete);
     await fetchTags();
   } catch (err) {
     console.error(err);
-    alert("Failed to delete tag.");
+    alert("Failed to delete user.");
+  } finally {
+    closeDeleteModal();
+    tagIdToDelete = null;
   }
 };
 

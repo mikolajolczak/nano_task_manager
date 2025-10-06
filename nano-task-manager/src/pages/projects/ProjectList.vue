@@ -29,7 +29,7 @@
             <td>
               <button class="btn btn-sm btn-info me-2" @click="goToDetail(p.id)">View</button>
               <button class="btn btn-sm btn-warning me-2" @click="startEdit(p)">Edit</button>
-              <button class="btn btn-sm btn-danger" @click="handleDelete(p.id)">Delete</button>
+              <button class="btn btn-sm btn-danger" @click="deleteProject(p.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -51,6 +51,28 @@
               @submit="handleFormSubmit"
               @cancel="closeModal"
             />
+          </div>
+        </div>
+      </div>
+    </div>
+        <div
+      id="confirmDeleteModal"
+      ref="deleteModalRef"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="confirmDeleteLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="confirmDeleteLabel" class="modal-title">Confirm Delete</h5>
+            <button type="button" class="btn-close" @click="closeDeleteModal"></button>
+          </div>
+          <div class="modal-body">Are you sure you want to delete this project?</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="closeDeleteModal">Cancel</button>
+            <button class="btn btn-danger" @click="confirmDelete">Delete</button>
           </div>
         </div>
       </div>
@@ -77,6 +99,10 @@ const error = ref<string | null>(null);
 const editingProject = ref<Project | undefined>(undefined);
 const modalRef = ref<HTMLDivElement | null>(null);
 let bootstrapModal: Modal | null = null;
+
+const deleteModalRef = ref<HTMLDivElement | null>(null);
+let bootstrapDeleteModal: Modal | null = null;
+let projectIdToDelete: string | null = null;
 
 const router = useRouter();
 
@@ -120,14 +146,35 @@ const handleFormSubmit = async (data: Project) => {
   }
 };
 
-const handleDelete = async (id: string) => {
-  if (!confirm("Are you sure you want to delete this project?")) return;
+const deleteProject = (id: string) => {
+  projectIdToDelete = id;
+  showDeleteModal();
+};
+
+const showDeleteModal = () => {
+  if (deleteModalRef.value) {
+    bootstrapDeleteModal ??= new Modal(deleteModalRef.value);
+    bootstrapDeleteModal.show();
+  }
+};
+
+const closeDeleteModal = () => {
+  if (bootstrapDeleteModal) {
+    bootstrapDeleteModal.hide();
+  }
+};
+
+const confirmDelete = async () => {
+  if (!projectIdToDelete) return;
   try {
-    await apiDeleteProject(id);
+    await apiDeleteProject(projectIdToDelete);
     await fetchProjects();
   } catch (err) {
     console.error(err);
-    alert("Failed to delete project.");
+    alert("Failed to delete user.");
+  } finally {
+    closeDeleteModal();
+    projectIdToDelete = null;
   }
 };
 
@@ -149,6 +196,6 @@ onMounted(fetchProjects);
 
 <style scoped>
 .container {
-  max-width: 960px;
+  max-width: 80vw;
 }
 </style>

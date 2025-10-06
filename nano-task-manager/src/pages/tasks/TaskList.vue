@@ -33,7 +33,7 @@
             <td>
               <button class="btn btn-sm btn-info me-2" @click="goToDetail(t.id)">View</button>
               <button class="btn btn-sm btn-warning me-2" @click="startEdit(t)">Edit</button>
-              <button class="btn btn-sm btn-danger" @click="handleDelete(t.id)">Delete</button>
+              <button class="btn btn-sm btn-danger" @click="deleteTask(t.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -56,6 +56,28 @@
       </div>
     </div>
   </div>
+      <div
+      id="confirmDeleteModal"
+      ref="deleteModalRef"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="confirmDeleteLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="confirmDeleteLabel" class="modal-title">Confirm Delete</h5>
+            <button type="button" class="btn-close" @click="closeDeleteModal"></button>
+          </div>
+          <div class="modal-body">Are you sure you want to delete this task?</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="closeDeleteModal">Cancel</button>
+            <button class="btn btn-danger" @click="confirmDelete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -70,10 +92,12 @@ const tasks = ref<Task[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const editingTask = ref<Task | undefined>(undefined);
+const deleteModalRef = ref<HTMLDivElement | null>(null);
 const modalRef = ref<HTMLDivElement | null>(null);
 
 let bootstrapModal: Modal | null = null;
-
+let bootstrapDeleteModal: Modal | null = null;
+let taskIdToDelete: string | null = null;
 const router = useRouter();
 
 const fetchTasks = async () => {
@@ -117,17 +141,6 @@ const handleFormSubmit = async (data: Task) => {
   }
 };
 
-const handleDelete = async (id: string) => {
-  if (!confirm("Are you sure you want to delete this task?")) return;
-  try {
-    await apiDeleteTask(id);
-    await fetchTasks();
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete task.");
-  }
-};
-
 const showModal = () => {
   if (modalRef.value) {
     bootstrapModal ??= new Modal(modalRef.value);
@@ -141,11 +154,43 @@ const closeModal = () => {
   }
 };
 
+
+const deleteTask = (id: string) => {
+  taskIdToDelete = id;
+  showDeleteModal();
+};
+
+const showDeleteModal = () => {
+  if (deleteModalRef.value) {
+    bootstrapDeleteModal ??= new Modal(deleteModalRef.value);
+    bootstrapDeleteModal.show();
+  }
+};
+
+const closeDeleteModal = () => {
+  if (bootstrapDeleteModal) {
+    bootstrapDeleteModal.hide();
+  }
+};
+
+const confirmDelete = async () => {
+  if (!taskIdToDelete) return;
+  try {
+    await apiDeleteTask(taskIdToDelete);
+    await fetchTasks();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete user.");
+  } finally {
+    closeDeleteModal();
+    taskIdToDelete = null;
+  }
+};
 onMounted(fetchTasks);
 </script>
 
 <style scoped>
 .container {
-  max-width: 960px;
+  max-width: 80vw;
 }
 </style>
