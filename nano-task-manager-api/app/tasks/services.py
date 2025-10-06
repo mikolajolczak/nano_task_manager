@@ -59,19 +59,20 @@ class TaskService:
 
     def update_task(self, task_id: int, title: Optional[str] = None,
                     description: Optional[str] = None, task_status: Optional[str] = None,
-                    assignee_id: Optional[int] = None, tag_ids: Optional[List[int]] = None):
+                    assignee_id: Optional[int] = None, tag_ids: Optional[List[int]] = None, project_id: Optional[int] = None):
         if assignee_id:
             self._validate_user_exists(assignee_id)
         if tag_ids is not None:
             self._validate_tags_exist(tag_ids)
-
+        if project_id is not None:
+            self._validate_project_exists(project_id)
         task = self.repo.update(
             task_id=task_id,
             title=title,
             description=description,
             status=task_status,
             assignee_id=assignee_id,
-            tag_ids=tag_ids
+            tag_ids=tag_ids, project_id=project_id
         )
 
         if not task:

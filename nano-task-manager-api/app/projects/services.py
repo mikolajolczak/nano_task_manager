@@ -33,8 +33,8 @@ class ProjectService:
         return {"projects": projects, "total": total}
 
     def update_project(self, project_id: int, name: Optional[str] = None,
-                       description: Optional[str] = None):
-        project = self.repo.update(project_id=project_id, name=name, description=description)
+                       description: Optional[str] = None, owner_id: Optional[int] = None):
+        project = self.repo.update(project_id=project_id, name=name, description=description, owner_id=owner_id)
         if not project:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

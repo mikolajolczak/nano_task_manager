@@ -43,7 +43,7 @@ def update_project(project_id: int, project_data: ProjectUpdate, db: Session = D
     return service.update_project(
         project_id=project_id,
         name=project_data.name,
-        description=project_data.description
+        description=project_data.description, owner_id=project_data.owner_id,
     )
 
 

@@ -63,7 +63,8 @@ def update_task(task_id: int, task_data: TaskUpdate, db: Session = Depends(get_d
         description=task_data.description,
         task_status=task_data.status,
         assignee_id=task_data.assignee_id,
-        tag_ids=task_data.tag_ids
+        tag_ids=task_data.tag_ids,
+        project_id=task_data.project_id
     )
 
 

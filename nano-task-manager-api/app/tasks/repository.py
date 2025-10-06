@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from typing import Optional, List
 
@@ -57,13 +57,17 @@ class TaskRepository:
 
     def get_all(self, skip: int = 0, limit: int = 100):
         from .models import Task
-        return self.db.execute(
-            select(Task).offset(skip).limit(limit)
-        ).scalars().all()
+        stmt = (
+            select(Task)
+            .options(joinedload(Task.assignee)).options(joinedload(Task.project))
+            .offset(skip)
+            .limit(limit)
+        )
+        return self.db.execute(stmt).scalars().all()
 
     def update(self, task_id: int, title: Optional[str] = None, description: Optional[str] = None,
                status: Optional[str] = None, assignee_id: Optional[int] = None,
-               tag_ids: Optional[List[int]] = None):
+               tag_ids: Optional[List[int]] = None, project_id: Optional[int] = None):
         from ..tasks.models import Task
         from ..tags.models import Tag
 
@@ -82,6 +86,8 @@ class TaskRepository:
         if tag_ids is not None:
             tags = self.db.execute(select(Tag).where(Tag.id.in_(tag_ids))).scalars().all()
             task.tags = tags
+        if project_id is not None:
+            task.project_id = project_id
 
         self.db.commit()
         self.db.refresh(task)

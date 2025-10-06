@@ -1,6 +1,7 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
+from sqlalchemy.orm import relationship
 
 from ..core.database import Base
 
@@ -13,3 +14,7 @@ class Project(Base):
     description = Column(String)
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     created_at = Column(TIMESTAMP, default=datetime.datetime.now(datetime.UTC))
+
+    owner = relationship("User", back_populates="projects")
+
+    task = relationship("Task", back_populates="project")
