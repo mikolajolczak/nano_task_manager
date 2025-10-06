@@ -18,3 +18,6 @@ class Task(Base):
     assignee_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
     created_at = Column(TIMESTAMP, default=datetime.datetime.now(datetime.UTC))
     tags = relationship("Tag", secondary=task_tag, back_populates="tasks")
+
+    project = relationship("Project", back_populates="task")
+    assignee = relationship("User", back_populates="tasks")

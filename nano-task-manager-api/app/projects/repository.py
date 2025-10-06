@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from typing import Optional
 
@@ -29,11 +29,15 @@ class ProjectRepository:
 
     def get_all(self, skip: int = 0, limit: int = 100):
         from .models import Project
-        return self.db.execute(
-            select(Project).offset(skip).limit(limit)
-        ).scalars().all()
+        stmt = (
+            select(Project)
+            .options(joinedload(Project.owner))
+            .offset(skip)
+            .limit(limit)
+        )
+        return self.db.execute(stmt).scalars().all()
 
-    def update(self, project_id: int, name: Optional[str] = None, description: Optional[str] = None):
+    def update(self, project_id: int, name: Optional[str] = None, description: Optional[str] = None, owner_id: Optional[int] = None):
         project = self.get_by_id(project_id)
         if not project:
             return None
@@ -41,6 +45,8 @@ class ProjectRepository:
             project.name = name
         if description is not None:
             project.description = description
+        if owner_id is not None:
+            project.owner_id = owner_id
         self.db.commit()
         self.db.refresh(project)
         return project

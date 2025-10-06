@@ -1,6 +1,7 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP
+from sqlalchemy.orm import relationship
 
 from ..core.database import Base
 
@@ -12,3 +13,6 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     created_at = Column(TIMESTAMP, default=datetime.datetime.now(datetime.UTC))
+
+    projects = relationship("Project", back_populates="owner")
+    tasks = relationship("Task", back_populates="assignee")

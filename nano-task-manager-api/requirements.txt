@@ -3,3 +3,5 @@ fastapi
 sqlalchemy
 uvicorn
 pydantic[email]
+uvicorn[standard]
+gunicorn
