@@ -75,7 +75,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "submit", payload:Task): void;
+  (e: "submit", payload: Task): void;
   (e: "cancel"): void;
 }>();
 
