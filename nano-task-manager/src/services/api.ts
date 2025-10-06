@@ -15,15 +15,25 @@ export const createUser = (data: User) => api.post("/users", data);
 export const updateUser = (id: string, data: User) => api.patch(`/users/${id}`, data);
 export const deleteUser = (id: string) => api.delete(`/users/${id}`);
 
-export const getProjects = () => api.get("/projects");
+export const getProjects = (): Promise<{ data: { total: number; projects: Project[] } }> =>
+  api.get("/projects");
 export const createProject = (data: Project) => api.post("/projects", data);
+export const getProjectById = (id: string): Promise<{ data: Project }> =>
+  api.get(`/projects/${id}`);
+export const updateProject = (id: string, data: Project) => api.patch(`/projects/${id}`, data);
+export const deleteProject = (id: string) => api.delete(`/projects/${id}`);
 
-export const getTasks = () => api.get("/tasks");
+export const getTasks = (): Promise<{ data: { total: number; tasks: Task[] } }> =>
+  api.get("/tasks");
+export const getTaskById = (id: string): Promise<{ data: Task }> => api.get(`/tasks/${id}`);
 export const createTask = (data: Task) => api.post("/tasks", data);
 export const updateTask = (id: string, data: Task) => api.patch(`/tasks/${id}`, data);
 export const deleteTask = (id: string) => api.delete(`/tasks/${id}`);
 
-export const getTags = () => api.get("/tags");
-export const createTag = (data: Tag) => api.post("/tags", data);
+export const getTags = (): Promise<{ data: { total: number; tags: Tag[] } }> => api.get("/tags");
+export const createTag = (data: Tag): Promise<{ data: Tag }> => api.post("/tags", data);
+export const updateTag = (id: string, data: Tag): Promise<{ data: Tag }> =>
+  api.patch(`/tags/${id}`, data);
+export const deleteTag = (id: string) => api.delete(`/tags/${id}`);
 
 export default api;

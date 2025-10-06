@@ -1,8 +1,12 @@
+import type { Tag } from "./Tag";
+
 export interface Task {
-  id: number;
+  id: string;
   title: string;
   description?: string;
-  status: 'todo' | 'in_progress' | 'done';
-  project_id: number;
-  assignee_id?: number | null;
+  status: "todo" | "in_progress" | "done";
+  project_id: string;
+  assignee_id?: string | null;
+  tags: Tag[];
+  tag_ids?: string[];
 }
