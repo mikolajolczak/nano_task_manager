@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-        <div
+    <div
       id="confirmDeleteModal"
       ref="deleteModalRef"
       class="modal fade"
@@ -89,7 +89,6 @@ const modalRef = ref<HTMLDivElement | null>(null);
 const deleteModalRef = ref<HTMLDivElement | null>(null);
 let bootstrapDeleteModal: Modal | null = null;
 let tagIdToDelete: string | null = null;
-
 
 let bootstrapModal: Modal | null = null;
 

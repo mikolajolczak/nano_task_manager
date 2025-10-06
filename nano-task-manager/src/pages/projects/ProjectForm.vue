@@ -49,7 +49,6 @@ const isEdit = computed(() => !!props.project);
 const form = reactive<Project>({
   name: "",
   description: "",
-  owner_id: "-1",
   id: "-1",
 });
 

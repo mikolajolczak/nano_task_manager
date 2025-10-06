@@ -25,7 +25,7 @@
           <tr v-for="p in projects" :key="p.id">
             <td>{{ p.id }}</td>
             <td>{{ p.name }}</td>
-            <td>{{ p.owner_id }}</td>
+            <td>{{ p.owner?.name }}</td>
             <td>
               <button class="btn btn-sm btn-info me-2" @click="goToDetail(p.id)">View</button>
               <button class="btn btn-sm btn-warning me-2" @click="startEdit(p)">Edit</button>
@@ -55,7 +55,7 @@
         </div>
       </div>
     </div>
-        <div
+    <div
       id="confirmDeleteModal"
       ref="deleteModalRef"
       class="modal fade"

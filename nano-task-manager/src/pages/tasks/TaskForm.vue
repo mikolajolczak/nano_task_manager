@@ -87,7 +87,7 @@ const form = reactive<Task>({
   description: "",
   status: "todo",
   project_id: "-1",
-  assignee_id: null,
+  assignee_id: "-1",
   tags: [],
 });
 
@@ -108,7 +108,7 @@ watch(
       form.description = "";
       form.status = "todo";
       form.project_id = "-1";
-      form.assignee_id = null;
+      form.assignee_id = "-1";
       form.tags = [];
     }
   },

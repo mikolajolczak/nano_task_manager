@@ -28,8 +28,8 @@
             <td>{{ t.id }}</td>
             <td>{{ t.title }}</td>
             <td>{{ t.status }}</td>
-            <td>{{ t.project_id }}</td>
-            <td>{{ t.assignee_id || "None" }}</td>
+            <td>{{ t.project?.name }}</td>
+            <td>{{ t.assignee?.name || "None" }}</td>
             <td>
               <button class="btn btn-sm btn-info me-2" @click="goToDetail(t.id)">View</button>
               <button class="btn btn-sm btn-warning me-2" @click="startEdit(t)">Edit</button>
@@ -56,28 +56,28 @@
       </div>
     </div>
   </div>
-      <div
-      id="confirmDeleteModal"
-      ref="deleteModalRef"
-      class="modal fade"
-      tabindex="-1"
-      aria-labelledby="confirmDeleteLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 id="confirmDeleteLabel" class="modal-title">Confirm Delete</h5>
-            <button type="button" class="btn-close" @click="closeDeleteModal"></button>
-          </div>
-          <div class="modal-body">Are you sure you want to delete this task?</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" @click="closeDeleteModal">Cancel</button>
-            <button class="btn btn-danger" @click="confirmDelete">Delete</button>
-          </div>
+  <div
+    id="confirmDeleteModal"
+    ref="deleteModalRef"
+    class="modal fade"
+    tabindex="-1"
+    aria-labelledby="confirmDeleteLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="confirmDeleteLabel" class="modal-title">Confirm Delete</h5>
+          <button type="button" class="btn-close" @click="closeDeleteModal"></button>
+        </div>
+        <div class="modal-body">Are you sure you want to delete this task?</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeDeleteModal">Cancel</button>
+          <button class="btn btn-danger" @click="confirmDelete">Delete</button>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -153,7 +153,6 @@ const closeModal = () => {
     bootstrapModal.hide();
   }
 };
-
 
 const deleteTask = (id: string) => {
   taskIdToDelete = id;

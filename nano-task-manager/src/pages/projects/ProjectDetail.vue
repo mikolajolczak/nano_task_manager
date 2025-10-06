@@ -15,7 +15,7 @@
           <p>{{ project?.description }}</p>
           <p>
             <strong>Owner:</strong>
-            {{ project?.owner_id }}
+            {{ project?.owner?.name }}
           </p>
           <div class="d-flex gap-2">
             <button class="btn btn-warning" @click="editing = true">Edit</button>

@@ -19,11 +19,11 @@
           </p>
           <p>
             <strong>Project:</strong>
-            {{ task?.project_id }}
+            {{ task?.project?.name }}
           </p>
           <p>
             <strong>Assignee:</strong>
-            {{ task?.assignee_id || "None" }}
+            {{ task?.assignee?.name || "None" }}
           </p>
           <p>
             <strong>Tags:</strong>
